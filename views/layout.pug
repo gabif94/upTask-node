@@ -21,10 +21,10 @@ html(lang="en")
                 .panel.lista-proyectos
                     h2 Proyects
                     ul#proyectos.proyectos
-                        li
-                            a(href="#") Virtual Store Design
-                        li
-                            a(href="#") Logo Design 
-                        li
-                            a(href="#") Blog Design 
-            block content 
+                        if(proyects.length)
+                            each proyect in proyects
+                                li
+                                    a(href=`/proyects/${proyect.url}`)=proyect.name
+            block content
+
+            pre=vardump(proyects)
