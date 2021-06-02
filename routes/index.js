@@ -12,5 +12,7 @@ module.exports = function () {
 		proyectController.newProyect
 	);
 	router.get('/proyects/:url', proyectController.proyectByUrl);
+
+	router.get('/proyect/edit/:id', proyectController.editProyect)
 	return router;
 };

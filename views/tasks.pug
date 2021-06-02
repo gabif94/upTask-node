@@ -2,6 +2,14 @@ extends layout
 
 block content 
     .contenido-principal
-        h1=pageName
+        h1 #{pageName} - #{proyect.name}
+
+
+        pre=vardump(proyect)
+
+        .contenedor-acciones
+            a(href=`/proyect/edit/${proyect.id}` class="boton") Editar Proyecto
+            button#eliminar-proyecto(type="button"
+             class="boton eliminar") Eliminar Proyecto 
 
         
