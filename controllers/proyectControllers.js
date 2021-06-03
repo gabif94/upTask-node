@@ -36,14 +36,17 @@ exports.newProyect = async (req, res) => {
 };
 
 exports.proyectByUrl = async (req, res, next) => {
-	const proyectsPromise =  Proyects.findAll();
-	const proyectPromise =  Proyects.findOne({
+	const proyectsPromise = Proyects.findAll();
+	const proyectPromise = Proyects.findOne({
 		where: {
-			url: req.params.url
-		}
-	})
+			url: req.params.url,
+		},
+	});
 
-	const [proyects, proyect] = await Promise.all([proyectsPromise, proyectPromise])
+	const [proyects, proyect] = await Promise.all([
+		proyectsPromise,
+		proyectPromise,
+	]);
 	if (!proyect) return next();
 
 	res.render('tasks', {
@@ -53,19 +56,52 @@ exports.proyectByUrl = async (req, res, next) => {
 	});
 };
 exports.editProyect = async (req, res) => {
-	const proyectsPromise =  Proyects.findAll();
-	const proyectPromise =  Proyects.findOne({
+	const proyectsPromise = Proyects.findAll();
+	const proyectPromise = Proyects.findOne({
 		where: {
-			id: req.params.id
-		}
-	})
+			id: req.params.id,
+		},
+	});
 
-	const [proyects, proyect] = await Promise.all([proyectsPromise, proyectPromise])
+	const [proyects, proyect] = await Promise.all([
+		proyectsPromise,
+		proyectPromise,
+	]);
 
-
-	res.render('newProyect',{
+	res.render('newProyect', {
 		pageName: 'Edit Proyect',
+		proyect,
 		proyects,
-		proyect
-	})
-}
+	});
+};
+
+exports.updateProyect = async (req, res) => {
+	const {name} = req.body;
+	console.log(req.body);
+	let errors = [];
+	if (!name) {
+		errors.push({text: 'Add a proyect name'});
+	}
+	if (errors.length > 0) {
+		res.render('newProyect', {
+			pageName: 'New Proyect',
+			errors,
+			proyects,
+		});
+	} else {
+		await Proyects.update({name: name}, {where: {id: req.params.id}});
+		res.redirect('/');
+	}
+};
+
+exports.deleteProyect = async (req, res, next) => {
+	const {urlProyect} = req.query;
+
+	const result = await Proyects.destroy({where: {url: urlProyect}});
+
+	if (!result) {
+		return next();
+	}
+
+	res.status(200).send('Your project has been deleted.');
+};

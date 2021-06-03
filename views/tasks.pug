@@ -8,8 +8,9 @@ block content
         pre=vardump(proyect)
 
         .contenedor-acciones
-            a(href=`/proyect/edit/${proyect.id}` class="boton") Editar Proyecto
-            button#eliminar-proyecto(type="button"
-             class="boton eliminar") Eliminar Proyecto 
+            a(href=`/proyect/edit/${proyect.id}` class="boton") Edit Project
+
+            button#eliminar-proyecto(data-proyect-url=proyect.url type="button"
+             class="boton eliminar") Delete Project
 
         
