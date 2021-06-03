@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const proyectController = require('../controllers/proyectControllers');
 const {body} = require('express-validator/check');
+const taskController = require('../controllers/taskController')
 
 module.exports = function () {
 	router.get('/', proyectController.proyectHome);
@@ -21,6 +22,8 @@ module.exports = function () {
 	);
 
 	router.delete('/proyects/:url', proyectController.deleteProyect);
+
+	router.post('/proyects/:url', taskController.addTask)
 
 	return router;
 };

@@ -11,6 +11,7 @@ app.use(express.urlencoded({extended: false}));
 const db = require('./config/db');
 
 require('./models/Proyects');
+require('./models/Tasks')
 
 db.sync()
 	.then(() => console.log('connection successfull'))
