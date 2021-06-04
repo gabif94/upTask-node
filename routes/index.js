@@ -25,5 +25,7 @@ module.exports = function () {
 
 	router.post('/proyects/:url', taskController.addTask)
 
+	router.patch('/tasks/:id', taskController.changeStateTask)
+
 	return router;
 };
