@@ -27,5 +27,7 @@ module.exports = function () {
 
 	router.patch('/tasks/:id', taskController.changeStateTask)
 
+	router.delete('/tasks/:id', taskController.deleteTask)
+
 	return router;
 };
