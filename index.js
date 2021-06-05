@@ -12,6 +12,7 @@ const db = require('./config/db');
 
 require('./models/Proyects');
 require('./models/Tasks')
+require('./models/Users')
 
 db.sync()
 	.then(() => console.log('connection successfull'))

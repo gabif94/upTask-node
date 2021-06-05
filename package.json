@@ -25,6 +25,7 @@
   "homepage": "https://github.com/gabif94/upTask-node#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
     "concurrently": "^6.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.11.1",
