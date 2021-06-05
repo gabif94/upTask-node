@@ -3,6 +3,7 @@ const router = express.Router();
 const proyectController = require('../controllers/proyectControllers');
 const {body} = require('express-validator/check');
 const taskController = require('../controllers/taskController')
+const userController = require('../controllers/userController')
 
 module.exports = function () {
 	router.get('/', proyectController.proyectHome);
@@ -28,6 +29,8 @@ module.exports = function () {
 	router.patch('/tasks/:id', taskController.changeStateTask)
 
 	router.delete('/tasks/:id', taskController.deleteTask)
+
+	router.get('/create-account/', userController.createAccountForm)
 
 	return router;
 };
