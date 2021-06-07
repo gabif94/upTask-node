@@ -1,32 +1,51 @@
-const Sequelize = require('sequelize')
-const db = require('../config/db')
-const Proyects = require('./Proyects')
-const bcrypt = require('bcrypt')
+const Sequelize = require('sequelize');
+const db = require('../config/db');
+const Proyects = require('./Proyects');
+const bcrypt = require('bcrypt');
 
-const Users = db.define('users',{
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    email:{
-        type: Sequelize.STRING(60),
-        allowNull: false
+const Users = db.define(
+	'users',
+	{
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		email: {
+			type: Sequelize.STRING(60),
+			allowNull: false,
+			validate: {
+				isEmail: {
+					msg: 'Invalid Email',
+				},
+				notEmpty: {
+					msg: 'Email cannot be empty',
+				},
+			},
+			unique: {
+				args: true,
+				msg: 'User already exists',
+			},
+		},
+		password: {
+			type: Sequelize.STRING,
+			allowNull: false,
+			validate: {
+				notEmpty: {
+					msg: 'Password cannot be empty',
+				},
+			},
+		},
+	},
+	{
+		hooks: {
+			beforeCreate(user) {
+				user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
+			},
+		},
+	}
+);
 
-    },
-    password: {
-        type: Sequelize.STRING(40),
-        allowNull: false
-    }
-},
-{
-    hooks: {
-        beforeCreate(user){
-            user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10))
-        }
-    }
-})
+Users.hasMany(Proyects);
 
-Users.hasMany(Proyects)
-
-module.exports = Users
+module.exports = Users;
