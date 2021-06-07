@@ -46,6 +46,10 @@ const Users = db.define(
 	}
 );
 
-Users.hasMany(Proyects);
+Users.prototype.verifyPassword = function (password) {
+	return bcrypt.compareSync(password, this.password);
+};
+
+// Users.hasMany(Proyects);
 
 module.exports = Users;

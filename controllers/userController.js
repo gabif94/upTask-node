@@ -6,6 +6,15 @@ exports.createAccountForm = (req, res) => {
 	});
 };
 
+exports.logInForm = (req, res) => {
+	const {error} = res.locals.mesagges;
+
+	res.render('logIn', {
+		pageName: 'Login on UpTask',
+		error,
+	});
+};
+
 exports.createAccount = async (req, res, next) => {
 	const {email, password} = req.body;
 
@@ -14,7 +23,7 @@ exports.createAccount = async (req, res, next) => {
 			email,
 			password,
 		});
-		res.redirect('/sing-in');
+		res.redirect('/login');
 	} catch (error) {
 		req.flash(
 			'error',
