@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const bcrypt = require('bcrypt');
+const sendEmail = require('../handlers/email');
 
 exports.autenticateUser = passport.authenticate('local', {
 	successRedirect: '/',
@@ -40,9 +41,15 @@ exports.sendToken = async (req, res) => {
 
 	const resetUrl = `http://${req.headers.host}/restore-password/${user.token}`;
 
-	res.redirect(resetUrl);
+	await sendEmail.send({
+		user,
+		subject: 'Password reset',
+		resetUrl,
+		file: 'restorePassword',
+	});
 
-	console.log(resetUrl);
+	req.flash('success', 'A message was sent to your email');
+	res.redirect('/login');
 };
 
 exports.validateToken = async (req, res) => {
@@ -58,7 +65,7 @@ exports.validateToken = async (req, res) => {
 };
 
 exports.updatePassword = async (req, res) => {
-	const user = Users.findOne({
+	const user = await Users.findOne({
 		where: {
 			token: req.params.token,
 			expiration: {
@@ -71,6 +78,7 @@ exports.updatePassword = async (req, res) => {
 		req.flash('error', 'Invalid');
 		res.redirect('/restore-password');
 	}
+
 	user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
 	user.token = null;
 	user.expiration = null;
