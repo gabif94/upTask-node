@@ -9,6 +9,13 @@ html(lang="en")
             if error
                 p.alerta.error= error
 
+            if locals.mesagges
+                .alertas
+                    each category in Object.keys(locals.mesagges)
+                        each err in mesagges[category]
+                            .alerta(class=`${category}`)
+                                p= err 
+
             form#formulario.caja.caja-login(method="POST" action="/login")
                 .campo
                     label(for="email") E-mail:
@@ -18,7 +25,8 @@ html(lang="en")
                     input(type="password" name="password" placeholder="Your Password" value= password )
                 .campo.enviar
                     input.boton(type="submit" value="Login")
-                .campo
+                .campo.acciones
                     a(href="/create-account") Don't have an account yet? Create one for free
+                    a(href="/restore-password") Did you forget your password?
 
         script(src="/dist/bundle.js")

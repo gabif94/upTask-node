@@ -80,5 +80,13 @@ module.exports = function () {
 
 	router.get('/sign-off', authController.signOff);
 
+	router.get('/restore-password', userController.resetPasswordForm);
+
+	router.post('/restore-password', authController.sendToken);
+
+	router.get('/restore-password/:token', authController.validateToken);
+
+	router.post('/restore-password/:token', authController.updatePassword);
+
 	return router;
 };
