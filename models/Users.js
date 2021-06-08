@@ -50,6 +50,6 @@ Users.prototype.verifyPassword = function (password) {
 	return bcrypt.compareSync(password, this.password);
 };
 
-// Users.hasMany(Proyects);
+Users.hasMany(Proyects);
 
 module.exports = Users;

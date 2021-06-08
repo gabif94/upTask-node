@@ -1,8 +1,10 @@
 const Proyects = require('../models/Proyects');
-const Tasks = require('../models/Tasks')
+const Tasks = require('../models/Tasks');
 
 exports.proyectHome = async (req, res) => {
-	const proyects = await Proyects.findAll();
+	// console.log(res.locals.user);
+	const userId = res.locals.user.id;
+	const proyects = await Proyects.findAll({where: {userId}});
 	res.render('index', {
 		pageName: 'Proyects',
 		proyects,
@@ -10,7 +12,8 @@ exports.proyectHome = async (req, res) => {
 };
 
 exports.proyectForm = async (req, res) => {
-	const proyects = await Proyects.findAll();
+	const userId = res.locals.user.id;
+	const proyects = await Proyects.findAll({where: {userId}});
 	res.render('newProyect', {
 		pageName: 'New Proyect',
 		proyects,
@@ -18,8 +21,9 @@ exports.proyectForm = async (req, res) => {
 };
 
 exports.newProyect = async (req, res) => {
+	const userId = res.locals.user.id;
+	const proyects = await Proyects.findAll({where: {userId}});
 	const {name} = req.body;
-	console.log(req.body);
 	let errors = [];
 	if (!name) {
 		errors.push({text: 'Add a proyect name'});
@@ -31,16 +35,20 @@ exports.newProyect = async (req, res) => {
 			proyects,
 		});
 	} else {
-		const proyect = await Proyects.create({name});
+		const userId = res.locals.user.id;
+		await Proyects.create({name, userId});
 		res.redirect('/');
 	}
 };
 
 exports.proyectByUrl = async (req, res, next) => {
-	const proyectsPromise = Proyects.findAll();
+	const userId = res.locals.user.id;
+	const proyectsPromise = Proyects.findAll({where: {userId}});
+
 	const proyectPromise = Proyects.findOne({
 		where: {
 			url: req.params.url,
+			userId,
 		},
 	});
 
@@ -51,10 +59,9 @@ exports.proyectByUrl = async (req, res, next) => {
 
 	const tasks = await Tasks.findAll({
 		where: {
-			proyectId: proyect.id
-		}
-	})
-
+			proyectId: proyect.id,
+		},
+	});
 
 	if (!proyect) return next();
 
@@ -62,14 +69,17 @@ exports.proyectByUrl = async (req, res, next) => {
 		pageName: 'Tasks',
 		proyect,
 		proyects,
-		tasks
+		tasks,
 	});
 };
 exports.editProyect = async (req, res) => {
-	const proyectsPromise = Proyects.findAll();
+	const userId = res.locals.user.id;
+	const proyectsPromise = Proyects.findAll({where: {userId}});
+
 	const proyectPromise = Proyects.findOne({
 		where: {
 			id: req.params.id,
+			userId,
 		},
 	});
 
@@ -86,6 +96,8 @@ exports.editProyect = async (req, res) => {
 };
 
 exports.updateProyect = async (req, res) => {
+	const userId = res.locals.user.id;
+	const proyects = await Proyects.findAll({where: {userId}});
 	const {name} = req.body;
 	console.log(req.body);
 	let errors = [];
