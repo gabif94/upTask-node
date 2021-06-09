@@ -1,4 +1,5 @@
 const Users = require('../models/Users');
+const sendEmail = require('../handlers/email');
 
 exports.createAccountForm = (req, res) => {
 	res.render('createAccount', {
@@ -23,6 +24,19 @@ exports.createAccount = async (req, res, next) => {
 			email,
 			password,
 		});
+		const confirmUrl = `http://${req.headers.host}/confirm/${email}`;
+
+		const user = {
+			email,
+		};
+
+		await sendEmail.send({
+			user,
+			subject: 'Confirm your UpTask account',
+			confirmUrl,
+			file: 'confirmAccount',
+		});
+		req.flash('success', 'We send an email, confirm your account');
 		res.redirect('/login');
 	} catch (error) {
 		req.flash(
@@ -42,4 +56,20 @@ exports.resetPasswordForm = async (req, res) => {
 	res.render('restore', {
 		pageName: 'Restore your password',
 	});
+};
+
+exports.confirmAccount = async (req, res) => {
+	const user = await Users.findOne({where: {email: req.params.email}});
+
+	if (!user) {
+		req.flash('error', 'Invalid');
+		res.redirect('/create-account');
+	}
+
+	user.active = 1;
+
+	await user.save();
+
+	req.flash('success', 'Account activate succesfull');
+	res.redirect('/login');
 };

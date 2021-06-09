@@ -74,6 +74,8 @@ module.exports = function () {
 
 	router.post('/create-account', userController.createAccount);
 
+	router.get('/confirm/:email', userController.confirmAccount);
+
 	router.get('/login', userController.logInForm);
 
 	router.post('/login', authController.autenticateUser);

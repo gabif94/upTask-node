@@ -12,7 +12,7 @@ passport.use(
 		},
 		async (email, password, done) => {
 			try {
-				const user = await Users.findOne({where: {email: email}});
+				const user = await Users.findOne({where: {email, active: 1}});
 
 				if (!user.verifyPassword(password)) {
 					return done(null, false, {
